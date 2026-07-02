@@ -3,24 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EdgePay — Live Simulation</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>EdgePay 4.0 — Live USSD Simulation</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#04040c;--surface:#0a0a18;--green:#00e87a;--blue:#4f8ef7;--purple:#9f7aea;
-  --orange:#ff8c42;--red:#ff5f6d;--text:#f0f0ff;--muted:#5a5a80;--dim:#22223a;
-  --terminal-bg:#060a0e;
+  --bg:#000000;--surface:#1C1C1E;--green:#34C759;--blue:#007AFF;--purple:#5856D6;
+  --orange:#FF9500;--red:#FF3B30;--text:#F5F5F7;--muted:#636366;--dim:#2C2C2E;
+  --terminal-bg:#0a0a0f;--grad:linear-gradient(135deg,#007AFF,#5856D6);
 }
-body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(0,232,122,.04),transparent),radial-gradient(ellipse 60% 80% at 80% 80%,rgba(79,142,247,.04),transparent);pointer-events:none;z-index:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(0,122,255,.06),transparent),radial-gradient(ellipse 60% 80% at 80% 80%,rgba(88,86,214,.05),transparent);pointer-events:none;z-index:0;}
 
 /* ── PAGE HEADER ── */
-.page-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid rgba(255,255,255,.06);position:relative;z-index:10;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:30px;height:30px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#000;}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid rgba(255,255,255,.06);position:relative;z-index:10;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;}
+.logo-icon{width:32px;height:32px;background:var(--grad);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;overflow:hidden;}
+.logo-icon img{width:100%;height:100%;object-fit:cover;}
 .logo-name{font-weight:800;font-size:17px;letter-spacing:-.5px;}
-.sim-tag{background:rgba(255,140,66,.1);border:1px solid rgba(255,140,66,.3);color:#ff8c42;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;font-family:'JetBrains Mono',monospace;}
+.sim-tag{background:rgba(255,149,0,.12);border:1px solid rgba(255,149,0,.28);color:var(--orange);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;font-family:'JetBrains Mono',monospace;}
+.hdr-right{display:flex;align-items:center;gap:16px;}
+.hdr-link{font-size:12px;color:var(--blue);font-weight:600;text-decoration:none;}
+.hdr-link:hover{text-decoration:underline;}
 .hdr-tagline{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:8px;}
 .hdr-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pdot 2s infinite;}
 @keyframes pdot{0%,100%{opacity:1;}50%{opacity:.25;}}
@@ -58,25 +62,30 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .screen.active{display:flex;animation:sfade .2s ease;}
 @keyframes sfade{from{opacity:0;transform:scale(.98);}to{opacity:1;transform:scale(1);}}
 
-/* Bottom nav */
-.bnav{display:flex;border-top:1px solid rgba(255,255,255,.06);background:rgba(6,6,14,.96);backdrop-filter:blur(20px);padding:8px 0 22px;}
+/* Bottom nav — floating pill like app 4.0 */
+.bnav{display:flex;border-top:none;background:rgba(28,28,30,.96);backdrop-filter:blur(20px);padding:8px 10px 20px;margin:0 12px 8px;border-radius:24px;box-shadow:0 8px 32px rgba(0,0,0,.5);position:relative;z-index:5;}
 .bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px;}
-.bni-icon{font-size:18px;filter:grayscale(1);opacity:.5;transition:.2s;}
+.bni-icon{font-size:18px;filter:grayscale(1);opacity:.45;transition:.2s;}
 .bni-label{font-size:9px;color:var(--muted);font-weight:700;transition:.2s;}
 .bni.on .bni-icon{filter:none;opacity:1;}
-.bni.on .bni-label{color:var(--green);}
+.bni.on .bni-label{color:var(--blue);}
+.bni-qr{width:46px;height:46px;background:var(--grad);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-top:-20px;font-size:20px;box-shadow:0 8px 24px rgba(0,122,255,.35);border:3px solid #050508;}
 
 /* ── HOME SCREEN ── */
 .home-hdr{padding:8px 18px 12px;display:flex;align-items:center;justify-content:space-between;}
 .app-nm{font-weight:800;font-size:17px;letter-spacing:-.5px;}
-.offline-pill{background:rgba(0,232,122,.1);border:1px solid rgba(0,232,122,.25);color:var(--green);padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.5px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:4px;}
+.offline-pill{background:rgba(255,149,0,.12);border:1px solid rgba(255,149,0,.25);color:var(--orange);padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.5px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:4px;}
 .av{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
 
 .welcome{padding:0 18px 12px;}
 .w-sub{font-size:12px;color:var(--muted);}
 .w-name{font-size:19px;font-weight:800;color:#fff;margin-top:1px;}
 
-.bal-card{margin:0 14px 16px;background:linear-gradient(135deg,#162336,#0b1525);border:1px solid rgba(79,142,247,.18);border-radius:20px;padding:18px;position:relative;overflow:hidden;}
+.bal-card{margin:0 14px 16px;background:var(--grad);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px;position:relative;overflow:hidden;box-shadow:0 12px 32px rgba(0,122,255,.2);}
+.bal-src{display:flex;gap:6px;margin-bottom:10px;}
+.bsrc{font-size:9px;font-weight:800;padding:4px 10px;border-radius:100px;letter-spacing:.4px;cursor:pointer;}
+.bsrc.on{background:rgba(255,255,255,.22);color:#fff;}
+.bsrc.off{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);}
 .bal-card::before{content:'';position:absolute;top:-30px;right:-30px;width:90px;height:90px;background:radial-gradient(circle,rgba(79,142,247,.12),transparent);border-radius:50%;}
 .bal-lbl{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px;}
 .bal-amt{font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;}
@@ -113,7 +122,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .div-text{text-align:center;color:var(--muted);font-size:11px;padding:6px 0;}
 .qr-row{margin:0 18px 14px;background:rgba(79,142,247,.07);border:1.5px dashed rgba(79,142,247,.25);border-radius:14px;padding:14px;color:var(--blue);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s;}
 .qr-row:active{background:rgba(79,142,247,.14);}
-.prc-btn{margin:auto 18px 20px;display:block;width:calc(100% - 36px);background:linear-gradient(135deg,var(--blue),#3570e8);border:none;border-radius:14px;padding:15px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Sora',sans-serif;transition:.15s;box-shadow:0 8px 24px rgba(79,142,247,.28);}
+.prc-btn{margin:auto 18px 20px;display:block;width:calc(100% - 36px);background:var(--grad);border:none;border-radius:16px;padding:16px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;box-shadow:0 8px 24px rgba(0,122,255,.28);}
+.gallery-btn{margin:0 18px 12px;display:block;width:calc(100% - 36px);background:rgba(255,255,255,.06);border:1.5px dashed rgba(0,122,255,.35);border-radius:14px;padding:14px;color:var(--blue);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
 .prc-btn:active{transform:scale(.97);}
 
 /* ── PIN SCREEN ── */
@@ -274,14 +284,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- HEADER -->
 <div class="page-hdr">
-  <div class="logo">
+  <a href="../EdgePay_Landing/index.html" class="logo">
     <div class="logo-icon">E</div>
     <div class="logo-name">EdgePay</div>
-    <div class="sim-tag">● LIVE SIM</div>
-  </div>
-  <div class="hdr-tagline">
-    <div class="hdr-dot"></div>
-    USSD · GSM · NPCI · Zero Internet
+    <div class="sim-tag">● LIVE SIM v4.0</div>
+  </a>
+  <div class="hdr-right">
+    <a href="../EdgePay_Landing/index.html" class="hdr-link">← Landing Page</a>
+    <a href="../EdgePay_Landing/EdgePay-v4.0.0-arm64.apk" class="hdr-link" download>Download APK</a>
+    <div class="hdr-tagline">
+      <div class="hdr-dot"></div>
+      USSD · GSM · NPCI · Zero Internet
+    </div>
   </div>
 </div>
 
@@ -324,14 +338,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
           <div class="bal-card">
             <div class="bal-lbl">Available Balance</div>
+            <div class="bal-src">
+              <span class="bsrc on" id="src-wallet" onclick="setBalSrc('wallet')">WALLET</span>
+              <span class="bsrc off" id="src-bank" onclick="setBalSrc('bank')">HDFC</span>
+            </div>
             <div class="bal-amt" id="disp-bal">₹1,000.00</div>
-            <div class="bal-bank">Linked Bank: <span class="bank-tag">SBI</span> • A/c ••••1234</div>
+            <div class="bal-bank" id="bal-sub">Edge Wallet · Default ₹1,000 · Credits & debits sync locally</div>
           </div>
           <div class="qa">
-            <div class="qa-btn" onclick="nav('qr')"><div class="qa-ico" style="background:rgba(0,200,255,.1);">📷</div><div class="qa-lbl">Scan</div></div>
-            <div class="qa-btn" onclick="nav('send')"><div class="qa-ico" style="background:rgba(79,142,247,.1);">↗️</div><div class="qa-lbl">Send</div></div>
-            <div class="qa-btn" onclick="nav('history')"><div class="qa-ico" style="background:rgba(159,122,234,.1);">🕐</div><div class="qa-lbl">History</div></div>
-            <div class="qa-btn" onclick="nav('account')"><div class="qa-ico" style="background:rgba(255,140,66,.1);">👤</div><div class="qa-lbl">Account</div></div>
+            <div class="qa-btn" onclick="nav('qr')"><div class="qa-ico" style="background:rgba(0,122,255,.12);">📷</div><div class="qa-lbl">Scan QR</div></div>
+            <div class="qa-btn" onclick="nav('send')"><div class="qa-ico" style="background:rgba(88,86,214,.12);">👤</div><div class="qa-lbl">Pay Contact</div></div>
+            <div class="qa-btn" onclick="nav('history')"><div class="qa-ico" style="background:rgba(52,199,89,.12);">📒</div><div class="qa-lbl">Passbook</div></div>
+            <div class="qa-btn" onclick="nav('account')"><div class="qa-ico" style="background:rgba(255,149,0,.12);">⚙️</div><div class="qa-lbl">Settings</div></div>
           </div>
           <div class="sec-title">Recent Activity</div>
           <div class="tx-list" id="home-txlist">
@@ -347,9 +365,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
           <div class="bnav">
             <div class="bni on" onclick="nav('home')"><div class="bni-icon">🏠</div><div class="bni-label">Home</div></div>
-            <div class="bni" onclick="nav('send')"><div class="bni-icon">↗️</div><div class="bni-label">Send</div></div>
-            <div class="bni" onclick="nav('history')"><div class="bni-icon">🕐</div><div class="bni-label">History</div></div>
-            <div class="bni" onclick="nav('account')"><div class="bni-icon">👤</div><div class="bni-label">Account</div></div>
+            <div class="bni" onclick="nav('send')"><div class="bni-icon">💸</div><div class="bni-label">Pay</div></div>
+            <div class="bni" onclick="nav('qr')"><div class="bni-qr">▣</div></div>
+            <div class="bni" onclick="nav('history')"><div class="bni-icon">🕐</div><div class="bni-label">Activity</div></div>
+            <div class="bni" onclick="nav('account')"><div class="bni-icon">👤</div><div class="bni-label">Profile</div></div>
           </div>
         </div>
 
@@ -429,7 +448,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="svc-list">
             <div class="svc" onclick="doBalance()">
               <div class="svc-ico">💰</div>
-              <div class="svc-inf"><div class="svc-nm">Check Balance</div><div class="svc-desc">USSD *99*13# · ~3s</div></div>
+              <div class="svc-inf"><div class="svc-nm">Check Balance</div><div class="svc-desc">USSD dialer · HDFC SMS bal · 6 min refresh</div></div>
               <div class="svc-arr">›</div>
             </div>
             <div class="svc" onclick="doChangePin()">
@@ -439,7 +458,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             </div>
             <div class="svc" onclick="doRequest()">
               <div class="svc-ico">📨</div>
-              <div class="svc-inf"><div class="svc-nm">Request Money</div><div class="svc-desc">UPI collect request</div></div>
+              <div class="svc-inf"><div class="svc-nm">Request Money</div><div class="svc-desc">UPI collect request via USSD</div></div>
+              <div class="svc-arr">›</div>
+            </div>
+            <div class="svc" onclick="doSoundbox()">
+              <div class="svc-ico">🔊</div>
+              <div class="svc-inf"><div class="svc-nm">Payment Soundbox</div><div class="svc-desc">Hindi / English credit announcements</div></div>
               <div class="svc-arr">›</div>
             </div>
           </div>
@@ -455,8 +479,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               <div class="corner c-tl"></div><div class="corner c-tr"></div>
               <div class="corner c-bl"></div><div class="corner c-br"></div>
             </div>
-            <div class="qr-hint">Point camera at any UPI QR code</div>
-            <button class="prc-btn" onclick="simQR()" style="margin:0;width:100%;">🎯 Simulate QR Scan</button>
+            <div class="qr-hint">Point camera at any UPI QR — or upload from gallery</div>
+            <button class="gallery-btn" onclick="simGallery()">🖼 Upload from Gallery</button>
+            <button class="prc-btn" onclick="simQR()" style="margin:0 18px 20px;width:calc(100% - 36px);">🎯 Simulate QR Scan</button>
           </div>
         </div>
 
@@ -481,8 +506,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="hints">
       <div class="hbtn" onclick="quickSend()">⚡ Send ₹200 to Rahul</div>
       <div class="hbtn" onclick="quickBal()">💰 Check Balance</div>
-      <div class="hbtn" onclick="nav('history')">📋 History</div>
-      <div class="hbtn" onclick="nav('qr')">📷 QR Scan</div>
+      <div class="hbtn" onclick="nav('history')">📋 Passbook</div>
+      <div class="hbtn" onclick="simGallery()">🖼 Gallery QR</div>
+      <div class="hbtn" onclick="doSoundbox()">🔊 Test Soundbox</div>
     </div>
   </div>
 
@@ -517,14 +543,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="terminal">
       <div class="term-hdr">
         <div class="td r"></div><div class="td y"></div><div class="td g"></div>
-        <div class="term-name">edgepay@backend — engine v1.0.0</div>
+        <div class="term-name">edgepay@backend — engine v4.0.0</div>
         <div class="term-clr" onclick="clearTerm()">clear</div>
       </div>
       <div class="term-body" id="terminal">
         <div class="lg">
           <div class="lc"><span class="lts">09:05:50</span><span class="lcomp sys">SYS</span><span class="ldollar">$</span><span class="lact">engine_boot</span></div>
           <div class="ldet">
-            <div class="ldl"><span class="ar">→</span><span class="v">EdgePay v1.0.0 — USSD simulation ready</span></div>
+            <div class="ldl"><span class="ar">→</span><span class="v">EdgePay v4.0.0 — USSD simulation ready</span></div>
+            <div class="ldl"><span class="ar">→</span><span class="k">Soundbox:</span> <span class="v g">Hindi + English TTS enabled</span></div>
+            <div class="ldl"><span class="ar">→</span><span class="k">Balance watch:</span> <span class="v g">HDFC SMS · 6 min interval</span></div>
             <div class="ldl"><span class="ar">→</span><span class="k">USSD bridge:</span> <span class="v g">loaded (UssdModule.kt)</span></div>
             <div class="ldl"><span class="ar">→</span><span class="k">SMS parser:</span> <span class="v g">12 bank templates active</span></div>
             <div class="ldl"><span class="ar">→</span><span class="k">GSM radio:</span> <span class="v g">4G / 2G fallback ready</span></div>
@@ -808,8 +836,33 @@ async function doChangePin(){
 }
 
 async function doRequest(){
-  await log('edge','request_money',[['→','ussd_string','*99*5#','b'],['→','action','UPI Collect Request initiated',''],['→','delivery','NPCI push notification to payee','g']]);
-  toast('screen-account','📨 Collect request sent via UPI','rgba(79,142,247,.1)','rgba(79,142,247,.3)','var(--blue)');
+  await log('edge','request_money',[['→','ussd_string','*99*2*[mobile]*[amount]*1*1#','b'],['→','action','UPI Collect Request initiated',''],['→','delivery','NPCI push notification to payee','g']]);
+  toast('screen-account','📨 Collect request sent via UPI','rgba(0,122,255,.1)','rgba(0,122,255,.3)','var(--blue)');
+}
+
+async function doSoundbox(){
+  await log('edge','soundbox_announce',[['→','language','Hindi (hi)','b'],['→','text','Credit alert! Rs. 500 received','g'],['→','engine','react-native-tts · offline','']]);
+  toast('screen-account','🔊 Soundbox: "Credit alert! Rs. 500 prapt hua"','rgba(52,199,89,.1)','rgba(52,199,89,.3)','var(--green)');
+}
+
+function setBalSrc(mode){
+  const w=document.getElementById('src-wallet'), b=document.getElementById('src-bank'), sub=document.getElementById('bal-sub');
+  if(mode==='wallet'){
+    w.className='bsrc on'; b.className='bsrc off';
+    sub.textContent='Edge Wallet · Default ₹1,000 · Credits & debits sync locally';
+    document.getElementById('disp-bal').textContent=`₹${S.balance.toFixed(2)}`;
+  } else {
+    b.className='bsrc on'; w.className='bsrc off';
+    sub.innerHTML='HDFC Bank · SMS bal to 07308080808 · <span class="bank-tag">Auto 6 min</span>';
+    log('edge','hdfc_balance_sms',[['→','sms_to','07308080808','b'],['→','body','bal',''],['→','refresh','every 6 minutes (toggle in Settings)','g']]);
+  }
+}
+
+async function simGallery(){
+  await log('qr','gallery_upload',[['→','picker','launchImageLibrary + copyTo cachesDirectory',''],['→','decode','rn-qr-generator base64 fallback','g']]);
+  await w(800);
+  await simQR();
+  toast('qr','✓ Gallery image decoded offline','rgba(52,199,89,.1)','rgba(52,199,89,.25)','var(--green)');
 }
 
 function toast(scr,msg,bg,bord,col){
